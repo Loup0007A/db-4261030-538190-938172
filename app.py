@@ -22,7 +22,16 @@ def get_connection():
     return psycopg2.connect(db_url)
 
 st.title("🚀 Dashboard de Modification PostgreSQL")
-
+# Bloc à ajouter pour débugger
+if st.checkbox("Afficher la liste des tables disponibles"):
+    conn_debug = get_connection()
+    tables_df = pd.read_sql("""
+        SELECT table_name 
+        FROM information_schema.tables 
+        WHERE table_schema = 'public'
+    """, conn_debug)
+    st.write(tables_df)
+    conn_debug.close()
 # 2. Interface de sélection
 table_name = st.text_input("Nom de la table à éditer :", value="utilisateurs")
 
