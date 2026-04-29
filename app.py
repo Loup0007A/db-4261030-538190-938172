@@ -77,12 +77,12 @@ def get_table_info(_conn, table_name: str) -> dict:
     """Retourne (row_count, taille_disque, colonnes avec type)."""
     with _conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
         cur.execute(
-            "SELECT COUNT(*) AS cnt FROM %s" % psycopg2.extensions.quote_ident(table_name, cur)
+            f"SELECT COUNT(*) AS cnt FROM {psycopg2.extensions.quote_ident(table_name, cur)}"
         )
         row_count = cur.fetchone()["cnt"]
 
         cur.execute(
-            "SELECT pg_size_pretty(pg_total_relation_size(%s)) AS sz", (table_name,)
+            "SELECT pg_size_pretty(pg_total_relation_size(quote_ident(%s))) AS sz", (table_name,)
         )
         size = cur.fetchone()["sz"]
 
